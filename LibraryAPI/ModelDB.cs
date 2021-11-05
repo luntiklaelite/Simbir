@@ -44,10 +44,16 @@ namespace LibraryAPI
                 new Book(Humans[1]) { ID = 3, Title = "Хам", Genre = Genres[2] },
                 new Book(Humans[3]) { ID = 2, Title = "Дубровский", Genre = Genres[3] }
             };
+            LibraryCards = new List<LibraryCard>();
         }
+
 
         public List<Human> Humans { get; set; }
         public List<Genre> Genres { get; set; }
         public List<Book> Books { get; set; }
+        /// <summary>
+        /// 2.1.4 - Список, хранящий полученные человеком книги
+        /// </summary>
+        public List<LibraryCard> LibraryCards { get; set; }
     }
 }

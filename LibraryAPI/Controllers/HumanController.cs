@@ -61,7 +61,8 @@ namespace LibraryAPI.Controllers
         [HttpPost]
         public void AddHuman([FromBody] HumanDTO human)
         {
-            ModelDB.Init.Humans.Add(new Human { ID = 5, Fullname = human.Fullname, BirthDate = human.BirthDate });
+            var nextID = ModelDB.Init.Humans.Max(h => h.ID) + 1;
+            ModelDB.Init.Humans.Add(new Human { ID = nextID, Fullname = human.Fullname, BirthDate = human.BirthDate });
         }
 
         /// <summary>
