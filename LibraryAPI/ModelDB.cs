@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace LibraryAPI
 {
-    /// <summary>
-    /// 1.2.3 - Класс модели "базы данных"
-    /// </summary>
     public class ModelDB
     {
         private static ModelDB _init = null;
@@ -39,10 +36,10 @@ namespace LibraryAPI
             };
             Books = new List<Book>
             {
-                new Book(Humans[0]) { ID = 1, Title = "Ландыш", Genre = Genres[0] },
-                new Book(Humans[3]) { ID = 2, Title = "Евгений Онегин", Genre = Genres[1] },
-                new Book(Humans[1]) { ID = 3, Title = "Хам", Genre = Genres[2] },
-                new Book(Humans[3]) { ID = 2, Title = "Дубровский", Genre = Genres[3] }
+                new Book { ID = 1, Title = "Ландыш", Author = Humans[0], Genre = Genres[0] },
+                new Book { ID = 2, Title = "Евгений Онегин", Author = Humans[3], Genre = Genres[1] },
+                new Book { ID = 3, Title = "Хам", Author = Humans[1], Genre = Genres[2] },
+                new Book { ID = 2, Title = "Дубровский", Author = Humans[3], Genre = Genres[3] }
             };
         }
 
