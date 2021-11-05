@@ -49,12 +49,20 @@ namespace LibraryAPI.Controllers
         /// </summary>
         /// <param name="book"></param>
         [HttpPost]
-        public void AddBook([FromBody] BookDTO book)
+        public IActionResult AddBook(int authorID, int genreID, string bookTitle)
         {
-            var author = ModelDB.Init.Humans.FirstOrDefault(h => h.Fullname == book.AuthorName);
-            var genre = ModelDB.Init.Genres.FirstOrDefault(g => g.Name == book.Genre);
-            if(author != null)
-                ModelDB.Init.Books.Add(new Book(author) { ID = 5, Genre = genre, Author = author, Title = book.Title });
+            var author = ModelDB.Init.Humans.FirstOrDefault(h => h.ID == authorID);
+            if (author == null)
+                ModelState.AddModelError("authorID", "Bad authorID");
+            
+            var genre = ModelDB.Init.Genres.FirstOrDefault(g => g.ID == genreID);
+            if (genre == null)
+                ModelState.AddModelError("genreID", "Bad genreID");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var nextID = ModelDB.Init.Books.Max(b => b.ID) + 1;
+            ModelDB.Init.Books.Add(new Book(author) { ID = nextID, Genre = genre, Title = bookTitle });
+            return Ok();
         }
 
         /// <summary>
