@@ -1,3 +1,4 @@
+using LibraryAPI.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -43,6 +44,9 @@ namespace LibraryAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LibraryAPI v1"));
             }
+
+            app.UseMiddleware<RequestTimeLoggerMiddleware>();
+            app.UseMiddleware<AuthorizationMiddleware>();
 
             app.UseHttpsRedirection();
 

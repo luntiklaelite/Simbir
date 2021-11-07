@@ -23,25 +23,44 @@ namespace LibraryAPI.Controllers
             _logger = logger;
         }
 
+        [NonAction]
+        public IEnumerable<BookDTO> Sort(IEnumerable<BookDTO> coll, string sortBy)
+        {
+            sortBy = sortBy.ToLower();
+            switch (sortBy)
+            {
+                case "title":
+                    return coll.OrderBy(c => c.Title);
+                case "genre":
+                    return coll.OrderBy(c => c.Genre);
+                case "author":
+                    return coll.OrderBy(c => c.AuthorName);
+                default:
+                    return coll;
+            }
+        }
+
         /// <summary>
-        /// 1.4.1.1 - Возвращает список книг
+        /// 1.4.1.1 + 2.2.2 - Возвращает список книг
         /// </summary>
+        /// <param name="sortByProperty">Сортировка по свойству (author, genre, title) </param>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<BookDTO> GetAllBooks()
+        public IEnumerable<BookDTO> GetAllBooks(string sortByProperty = "")
         {
-            return ModelDB.Init.Books.Select(b => b.ToDTO());
+            return Sort(ModelDB.Init.Books.Select(b => b.ToDTO()), sortByProperty);
         }
 
         /// <summary>
         /// 1.4.1.2 - Возвращает список книг по автору (<paramref name="authorID"/>)
         /// </summary>
         /// <param name="authorID"></param>
+        /// <param name="sortByProperty">Сортировка по свойству (author, genre, title)</param>
         /// <returns></returns>
         [HttpGet("Contains")]
-        public IEnumerable<BookDTO> GetBookByAuthorID(int authorID)
+        public IEnumerable<BookDTO> GetBookByAuthorID(int authorID, string sortByProperty = "")
         {
-            return ModelDB.Init.Books.Where(b => b.Author.ID == authorID).Select(b => b.ToDTO());
+            return Sort(ModelDB.Init.Books.Where(b => b.Author.ID == authorID).Select(b => b.ToDTO()), sortByProperty);
         }
 
         /// <summary>
@@ -53,11 +72,11 @@ namespace LibraryAPI.Controllers
         {
             var author = ModelDB.Init.Humans.FirstOrDefault(h => h.ID == authorID);
             if (author == null)
-                ModelState.AddModelError("authorID", "Bad authorID");
+                ModelState.AddModelError("authorID", $"Author with id {authorID} not found");
             
             var genre = ModelDB.Init.Genres.FirstOrDefault(g => g.ID == genreID);
             if (genre == null)
-                ModelState.AddModelError("genreID", "Bad genreID");
+                ModelState.AddModelError("genreID", $"Genre with id {genreID} not found");
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var nextID = ModelDB.Init.Books.Max(b => b.ID) + 1;

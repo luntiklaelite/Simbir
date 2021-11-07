@@ -41,13 +41,14 @@ namespace LibraryAPI.Controllers
         {
             var human = ModelDB.Init.Humans.FirstOrDefault(h => h.ID == humanID);
             if (human == null)
-                ModelState.AddModelError("humanID", "Bad humanID");
+                ModelState.AddModelError("humanID", $"Human with id {humanID} not found");
             var book = ModelDB.Init.Books.FirstOrDefault(b => b.ID == bookID);
             if (book == null)
-                ModelState.AddModelError("bookID", "Bad bookID");
+                ModelState.AddModelError("bookID", $"Book with id {bookID} not found)");
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            ModelDB.Init.LibraryCards.Add(new LibraryCard { Book = book, Human = human, Received = received });
+            var nextID = ModelDB.Init.LibraryCards.Max(b => b.ID) + 1;
+            ModelDB.Init.LibraryCards.Add(new LibraryCard { ID = nextID, Book = book, Human = human, Received = received });
             return Ok();
         }
     }
