@@ -16,27 +16,24 @@ namespace LibraryAPI.Controllers
     [Route("[controller]")]
     public class BookController : ControllerBase
     {
-        private readonly ILogger<BookController> _logger;
-
-        public BookController(ILogger<BookController> logger)
+        public BookController()
         {
-            _logger = logger;
         }
 
         [NonAction]
-        public IEnumerable<BookDTO> Sort(IEnumerable<BookDTO> coll, string sortBy)
+        protected IEnumerable<BookDTO> Sort(IEnumerable<BookDTO> books, string sortBy)
         {
             sortBy = sortBy.ToLower();
             switch (sortBy)
             {
                 case "title":
-                    return coll.OrderBy(c => c.Title);
+                    return books.OrderBy(c => c.Title);
                 case "genre":
-                    return coll.OrderBy(c => c.Genre);
+                    return books.OrderBy(c => c.Genre);
                 case "author":
-                    return coll.OrderBy(c => c.AuthorName);
+                    return books.OrderBy(c => c.AuthorName);
                 default:
-                    return coll;
+                    return books;
             }
         }
 
@@ -46,7 +43,7 @@ namespace LibraryAPI.Controllers
         /// <param name="sortByProperty">Сортировка по свойству (author, genre, title) </param>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<BookDTO> GetAllBooks(string sortByProperty = "")
+        public IEnumerable<BookDTO> GetAllBooks([FromQuery] string sortByProperty = "")
         {
             return Sort(ModelDB.Init.Books.Select(b => b.ToDTO()), sortByProperty);
         }
@@ -57,10 +54,10 @@ namespace LibraryAPI.Controllers
         /// <param name="authorID"></param>
         /// <param name="sortByProperty">Сортировка по свойству (author, genre, title)</param>
         /// <returns></returns>
-        [HttpGet("Contains")]
-        public IEnumerable<BookDTO> GetBookByAuthorID(int authorID, string sortByProperty = "")
+        [HttpGet("ByAuthorID")]
+        public IEnumerable<BookDTO> GetBookByAuthorID([FromQuery] int authorID, [FromQuery] string sortByProperty = "")
         {
-            return Sort(ModelDB.Init.Books.Where(b => b.Author.ID == authorID).Select(b => b.ToDTO()), sortByProperty);
+            return Sort(ModelDB.Init.Books.Where(b => b.Author.Id == authorID).Select(b => b.ToDTO()), sortByProperty);
         }
 
         /// <summary>
@@ -70,17 +67,17 @@ namespace LibraryAPI.Controllers
         [HttpPost]
         public IActionResult AddBook(int authorID, int genreID, string bookTitle)
         {
-            var author = ModelDB.Init.Humans.FirstOrDefault(h => h.ID == authorID);
+            //TODO: сделать добавление через модель
+            var author = ModelDB.Init.Humans.FirstOrDefault(h => h.Id == authorID);
             if (author == null)
-                ModelState.AddModelError("authorID", $"Author with id {authorID} not found");
-            
-            var genre = ModelDB.Init.Genres.FirstOrDefault(g => g.ID == genreID);
+                return BadRequest($"Author with id {authorID} not found");
+
+            var genre = ModelDB.Init.Genres.FirstOrDefault(g => g.Id == genreID);
             if (genre == null)
-                ModelState.AddModelError("genreID", $"Genre with id {genreID} not found");
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            var nextID = ModelDB.Init.Books.Max(b => b.ID) + 1;
-            ModelDB.Init.Books.Add(new Book(author) { ID = nextID, Genre = genre, Title = bookTitle });
+                return BadRequest($"Genre with id {genreID} not found");
+
+            var nextID = ModelDB.Init.Books.Max(b => b.Id) + 1;
+            ModelDB.Init.Books.Add(new Book(author) { Id = nextID, Genre = genre, Title = bookTitle });
             return Ok();
         }
 
@@ -89,9 +86,9 @@ namespace LibraryAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete]
-        public void DeleteBook(int id)
+        public void DeleteBook([FromQuery] int id)
         {
-            ModelDB.Init.Books.RemoveAll(b => b.ID == id);
+            ModelDB.Init.Books.RemoveAll(b => b.Id == id);
         }
     }
 }

@@ -17,11 +17,8 @@ namespace LibraryAPI.Controllers
     [Route("[controller]")]
     public class LibraryCardController : ControllerBase
     {
-        private readonly ILogger<HumanController> _logger;
-
-        public LibraryCardController(ILogger<HumanController> logger)
+        public LibraryCardController()
         {
-            _logger = logger;
         }
 
         [HttpGet]
@@ -39,16 +36,16 @@ namespace LibraryAPI.Controllers
         [HttpPost]
         public IActionResult AddCard(int humanID, int bookID, DateTimeOffset received)
         {
-            var human = ModelDB.Init.Humans.FirstOrDefault(h => h.ID == humanID);
+            var human = ModelDB.Init.Humans.FirstOrDefault(h => h.Id == humanID);
             if (human == null)
                 ModelState.AddModelError("humanID", $"Human with id {humanID} not found");
-            var book = ModelDB.Init.Books.FirstOrDefault(b => b.ID == bookID);
+            var book = ModelDB.Init.Books.FirstOrDefault(b => b.Id == bookID);
             if (book == null)
                 ModelState.AddModelError("bookID", $"Book with id {bookID} not found)");
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var nextID = ModelDB.Init.LibraryCards.Max(b => b.ID) + 1;
-            ModelDB.Init.LibraryCards.Add(new LibraryCard { ID = nextID, Book = book, Human = human, Received = received });
+            var nextID = ModelDB.Init.LibraryCards.Max(b => b.Id) + 1;
+            ModelDB.Init.LibraryCards.Add(new LibraryCard { Id = nextID, Book = book, Human = human, Received = received });
             return Ok();
         }
     }

@@ -21,7 +21,7 @@ namespace LibraryAPI.Middlewares
             if (context.Request.Headers["Authorization"] != "Basic admin:admin")
             {
                 context.Response.StatusCode = 403;
-                await context.Response.WriteAsync("You aren't authorized" + " " + context.Request.Headers["Authorization"]);
+                await context.Response.WriteAsync("You aren't authorized");
             }
             else
             {

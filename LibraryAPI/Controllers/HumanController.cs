@@ -17,11 +17,8 @@ namespace LibraryAPI.Controllers
     [Route("[controller]")]
     public class HumanController : ControllerBase
     {
-        private readonly ILogger<HumanController> _logger;
-
-        public HumanController(ILogger<HumanController> logger)
+        public HumanController()
         {
-            _logger = logger;
         }
 
         /// <summary>
@@ -49,7 +46,7 @@ namespace LibraryAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("Contains")]
-        public IEnumerable<HumanDTO> GetHumanByName(string filter = "")
+        public IEnumerable<HumanDTO> GetHumanByName([FromQuery] string filter = "")
         {
             return ModelDB.Init.Humans.Where(h => h.Fullname.Contains(filter)).Select(h => h.ToDTO());
         }
@@ -61,8 +58,8 @@ namespace LibraryAPI.Controllers
         [HttpPost]
         public void AddHuman([FromBody] HumanDTO human)
         {
-            var nextID = ModelDB.Init.Humans.Max(h => h.ID) + 1;
-            ModelDB.Init.Humans.Add(new Human { ID = nextID, Fullname = human.Fullname, BirthDate = human.BirthDate });
+            var nextID = ModelDB.Init.Humans.Max(h => h.Id) + 1;
+            ModelDB.Init.Humans.Add(new Human { Id = nextID, Fullname = human.FullName, BirthDate = human.BirthDate });
         }
 
         /// <summary>
@@ -70,9 +67,9 @@ namespace LibraryAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete]
-        public void DeleteHuman(int id)
+        public void DeleteHuman([FromQuery] int id)
         {
-            ModelDB.Init.Humans.RemoveAll(h => h.ID == id);
+            ModelDB.Init.Humans.RemoveAll(h => h.Id == id);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace LibraryAPI.Models.Entities
     /// </summary>
     public class Human
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Fullname { get; set; }
         public DateTime BirthDate { get; set; }
         
@@ -21,9 +21,10 @@ namespace LibraryAPI.Models.Entities
         {
             WritedBooks = new List<Book>();
         }
+
         public HumanDTO ToDTO()
         {
-            return new HumanDTO { Fullname = Fullname, BirthDate = BirthDate };
+            return new HumanDTO { FullName = Fullname, BirthDate = BirthDate };
         }
     }
 }

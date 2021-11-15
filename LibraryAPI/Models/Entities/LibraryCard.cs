@@ -11,7 +11,7 @@ namespace LibraryAPI.Models.Entities
     /// </summary>
     public class LibraryCard
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public virtual Human Human { get; set; }
         public virtual Book Book { get; set; }
         public DateTimeOffset Received { get; set; }

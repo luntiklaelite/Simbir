@@ -23,9 +23,15 @@ namespace LibraryAPI.Middlewares
         public async Task InvokeAsync(HttpContext context)
         {
             DateTimeOffset dtStart = DateTimeOffset.Now;
-            await _next.Invoke(context);
-            DateTimeOffset dtEnd = DateTimeOffset.Now;
-            _logger.LogInformation($"Request Time: START [{dtStart.ToString("HH:mm:ss:fffffff")}] | END [{dtEnd.ToString("HH:mm:ss:fffffff")}] | Elapsed [{dtEnd - dtStart}]");
+            try
+            {
+                await _next.Invoke(context);
+            }
+            finally
+            {
+                DateTimeOffset dtEnd = DateTimeOffset.Now;
+                _logger.LogInformation($"Request Time: START [{dtStart.ToString("HH:mm:ss:fffffff")}] | END [{dtEnd.ToString("HH:mm:ss:fffffff")}] | Elapsed [{dtEnd - dtStart}]");
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ namespace LibraryAPI.Models.DTOs
         /// 2.2.1 - Валидация, а также валидация проходит в контроллере через ModelState
         /// </summary>
         [Required(ErrorMessage = "Укажите полное имя")]
-        public string Fullname { get; set; }
+        public string FullName { get; set; }
 
         /// <summary>
         /// 2.1.5 - В Library Card стоит уже нужный формат вывода, поэтому сделал здесь иной формат даты :)

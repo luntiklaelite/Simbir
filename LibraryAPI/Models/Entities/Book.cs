@@ -11,7 +11,7 @@ namespace LibraryAPI.Models.Entities
     /// </summary>
     public class Book
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
         public virtual Human Author { get; set; }
         public virtual Genre Genre { get; set; }

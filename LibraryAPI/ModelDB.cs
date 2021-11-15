@@ -11,7 +11,7 @@ namespace LibraryAPI
     /// </summary>
     public class ModelDB
     {
-        private static ModelDB _init = null;
+        private static ModelDB _init;
         public static ModelDB Init
         {
             get
@@ -25,24 +25,24 @@ namespace LibraryAPI
             //хардкод до внедрения entity :)
             Humans = new List<Human>
             {
-                new Human { ID = 1, Fullname = "Косуля Виталий Маркович", BirthDate = new DateTime(1970, 1, 1) },
-                new Human { ID = 2, Fullname = "Кизяк Вениамин Олегович", BirthDate = new DateTime(1969, 3, 4) },
-                new Human { ID = 3, Fullname = "Морда Ирина Васильевна", BirthDate = new DateTime(1999, 7, 7) },
-                new Human { ID = 4, Fullname = "Пушкин Александр Сергеевич", BirthDate = new DateTime(1800, 1, 1) }
+                new Human { Id = 1, Fullname = "Косуля Виталий Маркович", BirthDate = new DateTime(1970, 1, 1) },
+                new Human { Id = 2, Fullname = "Кизяк Вениамин Олегович", BirthDate = new DateTime(1969, 3, 4) },
+                new Human { Id = 3, Fullname = "Морда Ирина Васильевна", BirthDate = new DateTime(1999, 7, 7) },
+                new Human { Id = 4, Fullname = "Пушкин Александр Сергеевич", BirthDate = new DateTime(1800, 1, 1) }
             };
             Genres = new List<Genre>
             {
-                new Genre { ID = 1, Name = "Фантастика" },
-                new Genre { ID = 2, Name = "Романтика" },
-                new Genre { ID = 3, Name = "Боевик" },
-                new Genre { ID = 4, Name = "Роман" }
+                new Genre { Id = 1, Name = "Фантастика" },
+                new Genre { Id = 2, Name = "Романтика" },
+                new Genre { Id = 3, Name = "Боевик" },
+                new Genre { Id = 4, Name = "Роман" }
             };
             Books = new List<Book>
             {
-                new Book(Humans[0]) { ID = 1, Title = "Ландыш", Genre = Genres[0] },
-                new Book(Humans[3]) { ID = 2, Title = "Евгений Онегин", Genre = Genres[1] },
-                new Book(Humans[1]) { ID = 3, Title = "Хам", Genre = Genres[2] },
-                new Book(Humans[3]) { ID = 2, Title = "Дубровский", Genre = Genres[3] }
+                new Book(Humans[0]) { Id = 1, Title = "Ландыш", Genre = Genres[0] },
+                new Book(Humans[3]) { Id = 2, Title = "Евгений Онегин", Genre = Genres[1] },
+                new Book(Humans[1]) { Id = 3, Title = "Хам", Genre = Genres[2] },
+                new Book(Humans[3]) { Id = 2, Title = "Дубровский", Genre = Genres[3] }
             };
             LibraryCards = new List<LibraryCard>();
         }
