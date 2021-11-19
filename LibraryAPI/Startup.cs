@@ -1,8 +1,12 @@
 using LibraryAPI.Middlewares;
+using LibraryAPI.Repositories;
+using LibraryAPI.Repositories.Interfaces;
+using LibraryAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +31,17 @@ namespace LibraryAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = Configuration.GetConnectionString("LocalConnectionString");
+            services.AddDbContext<ContextDB>(options => options.UseSqlServer(connectionString));
+
+            services.AddTransient<IAuthorRepository, AuthorRepository>();
+            services.AddTransient<IBookRepository, BookRepository>();
+            services.AddTransient<IGenreRepository, GenreRepository>();
+            services.AddTransient<IHumanRepository, HumanRepository>();
+            services.AddTransient<ILibraryCardRepository, LibraryCardRepository>();
+
+            services.AddTransient<GenreService>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -45,7 +60,7 @@ namespace LibraryAPI
             }
 
             app.UseMiddleware<RequestTimeLoggerMiddleware>();
-            app.UseMiddleware<AuthorizationMiddleware>();
+            //app.UseMiddleware<AuthorizationMiddleware>();
 
             app.UseHttpsRedirection();
 

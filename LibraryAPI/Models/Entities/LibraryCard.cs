@@ -1,6 +1,8 @@
 ﻿using LibraryAPI.Models.DTOs;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,14 +13,16 @@ namespace LibraryAPI.Models.Entities
     /// </summary>
     public class LibraryCard
     {
-        public int Id { get; set; }
-        public virtual Human Human { get; set; }
-        public virtual Book Book { get; set; }
+        [Key]
+        public int BookId { get; set; }
+        [Key]
+        public int HumanId { get; set; }
+        [Required]
         public DateTimeOffset Received { get; set; }
 
-        public LibraryCardDTO ToDTO()
-        {
-            return new LibraryCardDTO { Human = Human.ToDTO(), Book = Book.ToDTO(), Received = Received };
-        }
+        public virtual Human Human { get; set; }
+        public virtual Book Book { get; set; }
+        
+
     }
 }

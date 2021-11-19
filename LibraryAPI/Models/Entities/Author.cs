@@ -1,5 +1,4 @@
-﻿using LibraryAPI.Models.DTOs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace LibraryAPI.Models.Entities
 {
-    /// <summary>
-    /// 1.2.1 - класс человека
-    /// </summary>
-    public class Human
+    public class Author
     {
         public int Id { get; set; }
         [Required]
@@ -18,12 +14,7 @@ namespace LibraryAPI.Models.Entities
         [Required]
         public string LastName { get; set; }
         public string MiddleName { get; set; }
-        public DateTime BirthDate { get; set; }
 
-        public virtual List<LibraryCard> LibraryCards { get; set; }
-
-        public Human()
-        {
-        }
+        public virtual List<Book> Books { get; set; }
     }
 }

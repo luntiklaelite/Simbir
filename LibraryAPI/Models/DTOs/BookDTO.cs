@@ -11,11 +11,13 @@ namespace LibraryAPI.Models.DTOs
     /// </summary>
     public class BookDTO
     {
+        [Required(ErrorMessage = "Укажите идентификатор")]
+        public int Id { get; set; }
         [Required(ErrorMessage = "Укажите название")]
         public string Title { get; set; }
         [Required(ErrorMessage = "Укажите автора")]
-        public string AuthorName { get; set; }
+        public AuthorDTO Author { get; set; }
         [Required(ErrorMessage = "Укажите жанр")]
-        public string Genre { get; set; }
+        public List<GenreDTO> Genres { get; set; }
     }
 }
