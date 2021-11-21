@@ -25,5 +25,10 @@ namespace LibraryAPI.Models.Entities
         public Human()
         {
         }
+
+        public string GetFullName()
+        {
+            return $"{FirstName} {LastName} {MiddleName}";
+        }
     }
 }

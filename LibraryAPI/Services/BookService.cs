@@ -1,5 +1,6 @@
 ﻿using LibraryAPI.Models.DTOs;
 using LibraryAPI.Models.Entities;
+using LibraryAPI.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,52 +10,76 @@ namespace LibraryAPI.Services
 {
     public class BookService
     {
-        
-
-        protected IEnumerable<BookDTO> Sort(IEnumerable<BookDTO> books, string sortBy = "")
+        IBookRepository _repository;
+        public BookService(IBookRepository repository)
         {
-            sortBy = sortBy.ToLower();
-            switch (sortBy)
-            {
-                case "title":
-                    return books.OrderBy(c => c.Title);
-                //case "genre":
-                //    return books.OrderBy(c => c.Genre);
-                //case "author":
-                //    return books.OrderBy(c => c.AuthorName);
-                default:
-                    return books;
-            }
+            _repository = repository;
         }
 
-        //public IEnumerable<BookDTO> GetAllBooks(string sortByProperty)
-        //{
-        //    return Sort(ContextDB.Init.Books.Select(b => b.ToDTO()), sortByProperty);
-        //}
+        public BookDTO BookDTOByModel(Book book)
+        {
+            return new BookDTO
+            {
+                Id = book.Id,
+                Title = book.Title,
+                Author = new AuthorDTO
+                {
+                    Id = book.Author.Id,
+                    FirstName = book.Author?.FirstName,
+                    MiddleName = book.Author?.MiddleName,
+                    LastName = book.Author?.LastName
+                },
+                Genres = book.Genres?.Select(s => new GenreDTO
+                {
+                    Id = s.Id,
+                    Name = s.Name
+                }).ToList()
+            };
+        }
 
-        //public IEnumerable<BookDTO> GetBookByAuthorID(int authorID, string sortByProperty = "")
-        //{
-        //    return Sort(ContextDB.Init.Books.Where(b => b.Author.Id == authorID).Select(b => b.ToDTO()), sortByProperty);
-        //}
+        public List<BookDTO> GetAllBooks()
+        {
+            return _repository.GetBooks().Select(b => BookDTOByModel(b)).ToList();
+        }
 
-        //public bool AddBook(int authorID, int genreID, string bookTitle)
-        //{
-        //    var author = ContextDB.Init.Humans.FirstOrDefault(h => h.Id == authorID);
-        //    if (author == null)
-        //        return BadRequest($"Author with id {authorID} not found");
+        public List<BookDTO> GetBooksByGenreId(int genreId)
+        {
+            return _repository.GetBooksByGenre(genreId).Select(b => BookDTOByModel(b)).ToList();
+        }
 
-        //    var genre = ContextDB.Init.Genres.FirstOrDefault(g => g.Id == genreID);
-        //    if (genre == null)
-        //        return BadRequest($"Genre with id {genreID} not found");
+        public List<BookDTO> GetBooksByAuthor(string firstName, string lastName, string middleName)
+        {
+            return _repository.GetBooksByAuthor(firstName, lastName, middleName).Select(b => BookDTOByModel(b)).ToList();
+        } 
 
-        //    var nextID = ContextDB.Init.Books.Max(b => b.Id) + 1;
-        //    ContextDB.Init.Books.Add(new Book(author) { Id = nextID, /*Genre = genre, */Title = bookTitle });
-        //    return Ok();
-        //}
+        public BookDTO UpdateGenresInBook(BookDTO book)
+        {
+            return BookDTOByModel(_repository.UpdateGenresInBook(book.Id, book.Genres.Select(s => new Genre { Id = s.Id, Name = s.Name }).ToList()));
+        }
 
-        //public void DeleteBook(int id)
-        //{
-        //    ContextDB.Init.Books.RemoveAll(b => b.Id == id);
-        //}
+        public BookDTO AddBook(BookDTO book)
+        {
+            var addedBook = _repository.AddBook(new Book
+            {
+                Title = book.Title,
+                Genres = book.Genres.Select(g => new Genre
+                {
+                    Id = g.Id,
+                    Name = g.Name
+                }).ToList(),
+                Author = new Author
+                {
+                    Id = book.Author.Id,
+                    FirstName = book.Author.FirstName,
+                    MiddleName = book.Author.MiddleName,
+                    LastName = book.Author.LastName
+                }
+            });
+            return BookDTOByModel(addedBook);
+        }
+        public void DeleteBook(int bookId)
+        {
+            _repository.DeleteBook(bookId);
+        }
     }
 }

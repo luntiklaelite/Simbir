@@ -1,4 +1,5 @@
 ﻿using LibraryAPI.Models.Entities;
+using LibraryAPI.Models.Other;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,20 @@ namespace LibraryAPI.Repositories.Interfaces
 {
     public interface IHumanRepository
     {
-        public Human AddHuman(Human humaan);
+        Human AddHuman(Human human);
 
-        public List<Human> GetHumans();
+        List<Human> GetHumans();
 
-        public Human UpdateHuman(Human human);
+        Human UpdateHuman(Human human);
 
-        public void DeleteHuman(Human human);
+        void DeleteHumanByFullname(string firstName, string lastName, string middleName);
+
+        void DeleteHumanById(int humanId);
+
+        List<LibraryCard> GetHumansBooks(int humanId);
+
+        void AddLibraryCard(int humanId, int bookId);
+
+        void DeleteLibraryCard(int humanId, int bookId);
     }
 }

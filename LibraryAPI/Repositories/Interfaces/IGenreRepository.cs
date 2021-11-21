@@ -9,14 +9,14 @@ namespace LibraryAPI.Repositories.Interfaces
 {
     public interface IGenreRepository
     {
-        public Genre AddGenre(Genre genre);
+        Genre AddGenre(Genre genre);
 
-        public List<Genre> GetGenres();
+        List<Genre> GetGenres();
 
-        public Genre UpdateGenre(Genre genre);
+        Genre UpdateGenre(Genre genre);
 
-        public void DeleteGenre(Genre genre);
+        void DeleteGenre(Genre genre);
 
-        public List<GenreStatistic> GetStatistic();
+        List<GenreStatistic> GetStatistic();
     }
 }

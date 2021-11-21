@@ -38,9 +38,11 @@ namespace LibraryAPI
             services.AddTransient<IBookRepository, BookRepository>();
             services.AddTransient<IGenreRepository, GenreRepository>();
             services.AddTransient<IHumanRepository, HumanRepository>();
-            services.AddTransient<ILibraryCardRepository, LibraryCardRepository>();
 
             services.AddTransient<GenreService>();
+            services.AddTransient<BookService>();
+            services.AddTransient<AuthorService>();
+            services.AddTransient<HumanService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -58,7 +60,7 @@ namespace LibraryAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LibraryAPI v1"));
             }
-
+            
             app.UseMiddleware<RequestTimeLoggerMiddleware>();
             //app.UseMiddleware<AuthorizationMiddleware>();
 

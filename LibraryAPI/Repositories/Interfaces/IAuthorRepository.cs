@@ -8,12 +8,14 @@ namespace LibraryAPI.Repositories.Interfaces
 {
     public interface IAuthorRepository
     {
-        public Author AddAuthor(Author author);
+        Author AddAuthor(Author author);
 
-        public List<Author> GetAuthors();
+        List<Author> GetAuthors();
 
-        public Author UpdateAuthor(Author author);
+        Author UpdateAuthor(Author author);
 
-        public void DeleteAuthor(Author author);
+        void DeleteAuthor(int authorId);
+
+        Author GetAuthorById(int authorId);
     }
 }

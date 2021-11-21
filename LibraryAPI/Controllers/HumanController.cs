@@ -1,5 +1,7 @@
 ﻿using LibraryAPI.Models.DTOs;
 using LibraryAPI.Models.Entities;
+using LibraryAPI.Models.Exceptions;
+using LibraryAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -17,59 +19,108 @@ namespace LibraryAPI.Controllers
     [Route("[controller]")]
     public class HumanController : ControllerBase
     {
-        //public HumanController()
-        //{
-        //}
+        HumanService _serivce;
+        public HumanController(HumanService service)
+        {
+            _serivce = service;
+        }
 
-        ///// <summary>
-        ///// 1.3.1.1 - Возвращает список всех людей
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet]
-        //public IEnumerable<HumanDTO> GetAllHumans()
-        //{
-        //    return ContextDB.Init.Humans.Select(h => h.ToDTO());
-        //}
+        /// <summary>
+        /// 1.3.1.1 - Возвращает список всех людей
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public IEnumerable<HumanDTO> GetAllHumans()
+        {
+            return _serivce.GetHumans();
+        }
 
-        ///// <summary>
-        ///// 1.3.1.2 - Возвращает список авторов
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet("Authors")]
-        //public IEnumerable<HumanDTO> GetAuthors()
-        //{
-        //    return ContextDB.Init.Humans.Where(h => h.WritedBooks.Count > 0).Select(h => h.ToDTO());
-        //}
+        /// <summary>
+        /// 1.3.2 - Добавляет человека
+        /// </summary>
+        /// <param name="human"></param>
+        [HttpPost]
+        public HumanDTO AddHuman([FromBody] HumanDTO human)
+        {
+            return _serivce.AddHuman(human);
+        }
 
-        ///// <summary>
-        ///// 1.3.1.3 - Возвращает список людей, в имени которых содержится <paramref name="filter"/>
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet("Contains")]
-        //public IEnumerable<HumanDTO> GetHumanByName([FromQuery] string filter = "")
-        //{
-        //    return ContextDB.Init.Humans.Where(h => h.Fullname.Contains(filter)).Select(h => h.ToDTO());
-        //}
+        [HttpPut]
+        public IActionResult UpdateHuman([FromBody] HumanDTO human)
+        {
+            try
+            {
+                return Ok(_serivce.UpdateHuman(human));
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("LibraryCards")]
+        public List<BookDTO> GetHumansBooks([FromQuery] int humanId)
+        {
+            return _serivce.GetHumansBooks(humanId);
+        }
 
-        ///// <summary>
-        ///// 1.3.2 - Добавляет человека
-        ///// </summary>
-        ///// <param name="human"></param>
-        //[HttpPost]
-        //public void AddHuman([FromBody] HumanDTO human)
-        //{
-        //    var nextID = ContextDB.Init.Humans.Max(h => h.Id) + 1;
-        //    ContextDB.Init.Humans.Add(new Human { Id = nextID, Fullname = human.FullName, BirthDate = human.BirthDate });
-        //}
+        [HttpPost("AddLibraryCard")]
+        public IActionResult AddLibraryCard(int humanId, int bookId)
+        {
+            try
+            {
+                _serivce.AddLibraryCard(humanId, bookId);
+                return Ok(_serivce.GetHumansBooks(humanId));
+            }
+            catch(BadRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
-        ///// <summary>
-        ///// 1.3.3 - Удаляет человека
-        ///// </summary>
-        ///// <param name="id"></param>
-        //[HttpDelete]
-        //public void DeleteHuman([FromQuery] int id)
-        //{
-        //    ContextDB.Init.Humans.RemoveAll(h => h.Id == id);
-        //}
+        [HttpPost("DeleteLibraryCard")]
+        public IActionResult DeleteLibraryCard(int humanId, int bookIdd)
+        {
+            try
+            {
+                _serivce.DeleteLibraryCard(humanId, bookIdd);
+                return Ok(_serivce.GetHumansBooks(humanId));
+            }
+            catch (BadRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// 1.3.3 - Удаляет человека
+        /// </summary>
+        /// <param name="humanId"></param>
+        [HttpDelete("DeleteById")]
+        public IActionResult DeleteHumanById([FromQuery] int humanId)
+        {
+            try
+            {
+                _serivce.DeleteHumanById(humanId);
+                return Ok();
+            }
+            catch(BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteByFullName")]
+        public IActionResult DeleteHumanByFullname([FromQuery] string firstName, [FromQuery] string lastName, [FromQuery] string middleName)
+        {
+            try
+            {
+                _serivce.DeleteHumanByFullname(firstName, lastName, middleName);
+                return Ok();
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
