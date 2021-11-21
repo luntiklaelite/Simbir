@@ -9,7 +9,7 @@ namespace LibraryAPI.Models.Entities
     /// <summary>
     /// Класс жанра
     /// </summary>
-    public class Genre
+    public class Genre : HistoryItem
     {
         public int Id { get; set; }
         [Required]

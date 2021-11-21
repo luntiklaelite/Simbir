@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LibraryAPI.Models.Entities
 {
-    public class Author
+    public class Author : HistoryItem
     {
         public int Id { get; set; }
         [Required]

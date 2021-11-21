@@ -26,6 +26,18 @@ namespace LibraryAPI.Controllers
             return _authorService.GetAuthors();
         }
 
+        [HttpGet("WritedBooksInYear")]
+        public List<AuthorDTO> GetAuthorsWhoHaveBooksInYear(int year, bool sortByIncrease = true)
+        {
+            return _authorService.GetAuthorsWhoHaveBooksInYear(year, sortByIncrease);
+        }
+
+        [HttpGet("BookTitleContains")]
+        public List<AuthorDTO> GetAuthorsWhoBookTitleContains(string containedWord)
+        {
+            return _authorService.GetAuthorsWhoBookTitleContains(containedWord);
+        }
+
         [HttpGet("WithBooks")]
         public AuthorBooksDTO GetAuthorWithBooks([FromQuery] int authorId)
         {

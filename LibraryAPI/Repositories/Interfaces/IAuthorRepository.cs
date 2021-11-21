@@ -12,10 +12,14 @@ namespace LibraryAPI.Repositories.Interfaces
 
         List<Author> GetAuthors();
 
+        List<Author> GetAuthorsWhoHaveBooksInYear(int year, bool sortByIncrease);
+
         Author UpdateAuthor(Author author);
 
         void DeleteAuthor(int authorId);
 
         Author GetAuthorById(int authorId);
+
+        List<Author> GetAuthorsWhoBookTitleContains(string containedWord);
     }
 }

@@ -22,6 +22,7 @@ namespace LibraryAPI.Services
             {
                 Id = book.Id,
                 Title = book.Title,
+                DateOfWrite = book.DateOfWrite,
                 Author = new AuthorDTO
                 {
                     Id = book.Author.Id,
@@ -62,6 +63,7 @@ namespace LibraryAPI.Services
             var addedBook = _repository.AddBook(new Book
             {
                 Title = book.Title,
+                DateOfWrite = book.DateOfWrite,
                 Genres = book.Genres.Select(g => new Genre
                 {
                     Id = g.Id,

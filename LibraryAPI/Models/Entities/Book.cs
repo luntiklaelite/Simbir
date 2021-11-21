@@ -10,11 +10,12 @@ namespace LibraryAPI.Models.Entities
     /// <summary>
     /// 1.2.2 - Класс книги
     /// </summary>
-    public class Book
+    public class Book : HistoryItem
     {
         public int Id { get; set; }
         [Required]
         public string Title { get; set; }
+        public DateTime DateOfWrite { get; set; }
 
         [Required]
         public virtual Author Author { get; set; }

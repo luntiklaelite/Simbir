@@ -10,7 +10,7 @@ namespace LibraryAPI.Models.Entities
     /// <summary>
     /// 1.2.1 - класс человека
     /// </summary>
-    public class Human
+    public class Human : HistoryItem
     {
         public int Id { get; set; }
         [Required]

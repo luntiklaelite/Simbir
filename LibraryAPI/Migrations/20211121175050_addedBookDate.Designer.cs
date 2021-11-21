@@ -4,14 +4,16 @@ using LibraryAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LibraryAPI.Migrations
 {
     [DbContext(typeof(ContextDB))]
-    partial class ContextDBModelSnapshot : ModelSnapshot
+    [Migration("20211121175050_addedBookDate")]
+    partial class addedBookDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,15 +43,9 @@ namespace LibraryAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTimeOffset>("ChangeDateTime")
-                        .HasColumnType("datetimeoffset");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("InputDateTime")
-                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -57,9 +53,6 @@ namespace LibraryAPI.Migrations
 
                     b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("Version")
-                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -76,21 +69,12 @@ namespace LibraryAPI.Migrations
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("ChangeDateTime")
-                        .HasColumnType("datetimeoffset");
-
                     b.Property<DateTime>("DateOfWrite")
                         .HasColumnType("datetime2");
-
-                    b.Property<DateTimeOffset>("InputDateTime")
-                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("Version")
-                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -106,18 +90,9 @@ namespace LibraryAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTimeOffset>("ChangeDateTime")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("InputDateTime")
-                        .HasColumnType("datetimeoffset");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("Version")
-                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -134,15 +109,9 @@ namespace LibraryAPI.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTimeOffset>("ChangeDateTime")
-                        .HasColumnType("datetimeoffset");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("InputDateTime")
-                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -150,9 +119,6 @@ namespace LibraryAPI.Migrations
 
                     b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("Version")
-                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 

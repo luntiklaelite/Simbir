@@ -39,6 +39,7 @@ namespace LibraryAPI.Services
                 {
                     Id = b.Id,
                     Title = b.Title,
+                    DateOfWrite = b.DateOfWrite,
                     Genres = b.Genres?.Select(g => new GenreDTO
                     {
                         Id = g.Id,
@@ -51,6 +52,18 @@ namespace LibraryAPI.Services
         public List<AuthorDTO> GetAuthors()
         {
             return _repository.GetAuthors().Select(s => AuthorDTOByModel(s)).ToList();
+        }
+
+        public List<AuthorDTO> GetAuthorsWhoHaveBooksInYear(int year, bool sortByIncrease)
+        {
+            return _repository.GetAuthorsWhoHaveBooksInYear(year, sortByIncrease)
+                .Select(a => AuthorDTOByModel(a)).ToList();
+        }
+
+        public List<AuthorDTO> GetAuthorsWhoBookTitleContains(string containedWord)
+        {
+            return _repository.GetAuthorsWhoBookTitleContains(containedWord)
+                .Select(a => AuthorDTOByModel(a)).ToList();
         }
 
         public AuthorBooksDTO GetBooksByAuthorId(int authorId)
@@ -68,7 +81,8 @@ namespace LibraryAPI.Services
                 LastName = author.Author.LastName,
                 Books = author.Books?.Select(b => new Book
                 {
-                    Title = b.Title
+                    Title = b.Title,
+                    DateOfWrite = b.DateOfWrite,
                 }).ToList()
             });
             return AuthorBooksDTOByModel(addedAuthor);

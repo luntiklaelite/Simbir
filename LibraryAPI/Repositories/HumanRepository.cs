@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LibraryAPI.Repositories
 {
-    public class HumanRepository : IHumanRepository
+    public class HumanRepository : BaseRepository, IHumanRepository
     {
         ContextDB _contextDB;
         public HumanRepository(ContextDB contextDB)
@@ -22,6 +22,7 @@ namespace LibraryAPI.Repositories
         public Human AddHuman(Human human)
         {
             _contextDB.Humans.Add(human);
+            base.SetInputDate(human);
             _contextDB.SaveChanges();
             return human;
         }
@@ -54,6 +55,7 @@ namespace LibraryAPI.Repositories
             if (_contextDB.Humans.Count(h => h.Id == human.Id) == 0)
                 throw new BadRequestException("Такого пользователя не существует!");
             _contextDB.Humans.Update(human);
+            base.UpdateDateAndVersion(human);
             _contextDB.SaveChanges();
             return human;
         }

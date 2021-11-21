@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LibraryAPI.Repositories
 {
-    public class BookRepository : IBookRepository
+    public class BookRepository : BaseRepository, IBookRepository
     {
         ContextDB _contextDB;
         public BookRepository(ContextDB contextDB)
@@ -27,6 +27,9 @@ namespace LibraryAPI.Repositories
                     _contextDB.Genres.Add(genre);
             }
             _contextDB.Books.Add(book);
+            base.SetInputDate(book);
+            base.SetInputDate(book.Genres.ToArray());
+            base.SetInputDate(book.Author);
             _contextDB.SaveChanges();
             return book;
         }
@@ -75,6 +78,7 @@ namespace LibraryAPI.Repositories
                 book.Genres.Add(_contextDB.Genres.FirstOrDefault(g => g.Id == genre.Id));
             }
             _contextDB.Books.Update(book);
+            base.UpdateDateAndVersion(book);
             _contextDB.SaveChanges();
             return book;
         }

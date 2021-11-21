@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LibraryAPI.Repositories
 {
-    public class GenreRepository : IGenreRepository
+    public class GenreRepository : BaseRepository, IGenreRepository
     {
         ContextDB _contextDB;
         public GenreRepository(ContextDB contextDB)
@@ -20,6 +20,7 @@ namespace LibraryAPI.Repositories
         public Genre AddGenre(Genre genre)
         {
             _contextDB.Genres.Add(genre);
+            base.SetInputDate(genre);
             _contextDB.SaveChanges();
             return genre;
         }
@@ -47,6 +48,7 @@ namespace LibraryAPI.Repositories
         public Genre UpdateGenre(Genre genre)
         {
             _contextDB.Genres.Update(genre);
+            base.UpdateDateAndVersion(genre);
             _contextDB.SaveChanges();
             return genre;
         }

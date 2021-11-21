@@ -76,6 +76,7 @@ namespace LibraryAPI.Services
             {
                 Id = lc.Book.Id,
                 Title = lc.Book.Title,
+                DateOfWrite = lc.Book.DateOfWrite,
                 Author = new AuthorDTO
                 {
                     FirstName = lc.Book.Author.FirstName,
