@@ -1,5 +1,7 @@
 ﻿using LibraryAPI.Models.DTOs;
 using LibraryAPI.Models.Entities;
+using LibraryAPI.Models.Exceptions;
+using LibraryAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -17,8 +19,10 @@ namespace LibraryAPI.Controllers
     [Route("[controller]")]
     public class HumanController : ControllerBase
     {
-        public HumanController()
+        HumanService _serivce;
+        public HumanController(HumanService service)
         {
+            _serivce = service;
         }
 
         /// <summary>
@@ -28,27 +32,7 @@ namespace LibraryAPI.Controllers
         [HttpGet]
         public IEnumerable<HumanDTO> GetAllHumans()
         {
-            return ModelDB.Init.Humans.Select(h => h.ToDTO());
-        }
-
-        /// <summary>
-        /// 1.3.1.2 - Возвращает список авторов
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("Authors")]
-        public IEnumerable<HumanDTO> GetAuthors()
-        {
-            return ModelDB.Init.Humans.Where(h => h.WritedBooks.Count > 0).Select(h => h.ToDTO());
-        }
-
-        /// <summary>
-        /// 1.3.1.3 - Возвращает список людей, в имени которых содержится <paramref name="filter"/>
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("Contains")]
-        public IEnumerable<HumanDTO> GetHumanByName([FromQuery] string filter = "")
-        {
-            return ModelDB.Init.Humans.Where(h => h.Fullname.Contains(filter)).Select(h => h.ToDTO());
+            return _serivce.GetHumans();
         }
 
         /// <summary>
@@ -56,20 +40,87 @@ namespace LibraryAPI.Controllers
         /// </summary>
         /// <param name="human"></param>
         [HttpPost]
-        public void AddHuman([FromBody] HumanDTO human)
+        public HumanDTO AddHuman([FromBody] HumanDTO human)
         {
-            var nextID = ModelDB.Init.Humans.Max(h => h.Id) + 1;
-            ModelDB.Init.Humans.Add(new Human { Id = nextID, Fullname = human.FullName, BirthDate = human.BirthDate });
+            return _serivce.AddHuman(human);
+        }
+
+        [HttpPut]
+        public IActionResult UpdateHuman([FromBody] HumanDTO human)
+        {
+            try
+            {
+                return Ok(_serivce.UpdateHuman(human));
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("LibraryCards")]
+        public List<BookDTO> GetHumansBooks([FromQuery] int humanId)
+        {
+            return _serivce.GetHumansBooks(humanId);
+        }
+
+        [HttpPost("AddLibraryCard")]
+        public IActionResult AddLibraryCard(int humanId, int bookId)
+        {
+            try
+            {
+                _serivce.AddLibraryCard(humanId, bookId);
+                return Ok(_serivce.GetHumansBooks(humanId));
+            }
+            catch(BadRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("DeleteLibraryCard")]
+        public IActionResult DeleteLibraryCard(int humanId, int bookIdd)
+        {
+            try
+            {
+                _serivce.DeleteLibraryCard(humanId, bookIdd);
+                return Ok(_serivce.GetHumansBooks(humanId));
+            }
+            catch (BadRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         /// <summary>
         /// 1.3.3 - Удаляет человека
         /// </summary>
-        /// <param name="id"></param>
-        [HttpDelete]
-        public void DeleteHuman([FromQuery] int id)
+        /// <param name="humanId"></param>
+        [HttpDelete("DeleteById")]
+        public IActionResult DeleteHumanById([FromQuery] int humanId)
         {
-            ModelDB.Init.Humans.RemoveAll(h => h.Id == id);
+            try
+            {
+                _serivce.DeleteHumanById(humanId);
+                return Ok();
+            }
+            catch(BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteByFullName")]
+        public IActionResult DeleteHumanByFullname([FromQuery] string firstName, [FromQuery] string lastName, [FromQuery] string middleName)
+        {
+            try
+            {
+                _serivce.DeleteHumanByFullname(firstName, lastName, middleName);
+                return Ok();
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

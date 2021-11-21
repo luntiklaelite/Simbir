@@ -1,6 +1,7 @@
 ﻿using LibraryAPI.Models.DTOs;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,22 +10,25 @@ namespace LibraryAPI.Models.Entities
     /// <summary>
     /// 1.2.1 - класс человека
     /// </summary>
-    public class Human
+    public class Human : HistoryItem
     {
         public int Id { get; set; }
-        public string Fullname { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        public string MiddleName { get; set; }
         public DateTime BirthDate { get; set; }
-        
-        public virtual List<Book> WritedBooks { get; set; }
+
+        public virtual List<LibraryCard> LibraryCards { get; set; }
 
         public Human()
         {
-            WritedBooks = new List<Book>();
         }
 
-        public HumanDTO ToDTO()
+        public string GetFullName()
         {
-            return new HumanDTO { FullName = Fullname, BirthDate = BirthDate };
+            return $"{FirstName} {LastName} {MiddleName}";
         }
     }
 }

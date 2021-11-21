@@ -1,5 +1,7 @@
 ﻿using LibraryAPI.Models.DTOs;
 using LibraryAPI.Models.Entities;
+using LibraryAPI.Models.Exceptions;
+using LibraryAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,25 +18,10 @@ namespace LibraryAPI.Controllers
     [Route("[controller]")]
     public class BookController : ControllerBase
     {
-        public BookController()
+        private BookService _service;
+        public BookController(BookService service)
         {
-        }
-
-        [NonAction]
-        protected IEnumerable<BookDTO> Sort(IEnumerable<BookDTO> books, string sortBy)
-        {
-            sortBy = sortBy.ToLower();
-            switch (sortBy)
-            {
-                case "title":
-                    return books.OrderBy(c => c.Title);
-                case "genre":
-                    return books.OrderBy(c => c.Genre);
-                case "author":
-                    return books.OrderBy(c => c.AuthorName);
-                default:
-                    return books;
-            }
+            _service = service;
         }
 
         /// <summary>
@@ -43,21 +30,21 @@ namespace LibraryAPI.Controllers
         /// <param name="sortByProperty">Сортировка по свойству (author, genre, title) </param>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<BookDTO> GetAllBooks([FromQuery] string sortByProperty = "")
+        public List<BookDTO> GetAllBooks()
         {
-            return Sort(ModelDB.Init.Books.Select(b => b.ToDTO()), sortByProperty);
+            return _service.GetAllBooks();
         }
 
-        /// <summary>
-        /// 1.4.1.2 - Возвращает список книг по автору (<paramref name="authorID"/>)
-        /// </summary>
-        /// <param name="authorID"></param>
-        /// <param name="sortByProperty">Сортировка по свойству (author, genre, title)</param>
-        /// <returns></returns>
-        [HttpGet("ByAuthorID")]
-        public IEnumerable<BookDTO> GetBookByAuthorID([FromQuery] int authorID, [FromQuery] string sortByProperty = "")
+        [HttpGet("ByGenre")]
+        public List<BookDTO> GetBooksByGenre(int genreId)
         {
-            return Sort(ModelDB.Init.Books.Where(b => b.Author.Id == authorID).Select(b => b.ToDTO()), sortByProperty);
+            return _service.GetBooksByGenreId(genreId);
+        }
+
+        [HttpGet("ByAuthor")]
+        public List<BookDTO> GetBooksByAuthor(string firstName, string lastName, string middleName)
+        {
+            return _service.GetBooksByAuthor(firstName, lastName, middleName);
         }
 
         /// <summary>
@@ -65,30 +52,33 @@ namespace LibraryAPI.Controllers
         /// </summary>
         /// <param name="book"></param>
         [HttpPost]
-        public IActionResult AddBook(int authorID, int genreID, string bookTitle)
+        public BookDTO AddBook(BookDTO book)
         {
-            //TODO: сделать добавление через модель
-            var author = ModelDB.Init.Humans.FirstOrDefault(h => h.Id == authorID);
-            if (author == null)
-                return BadRequest($"Author with id {authorID} not found");
+            return _service.AddBook(book);
+        }
 
-            var genre = ModelDB.Init.Genres.FirstOrDefault(g => g.Id == genreID);
-            if (genre == null)
-                return BadRequest($"Genre with id {genreID} not found");
-
-            var nextID = ModelDB.Init.Books.Max(b => b.Id) + 1;
-            ModelDB.Init.Books.Add(new Book(author) { Id = nextID, Genre = genre, Title = bookTitle });
-            return Ok();
+        [HttpPut]
+        public BookDTO UpdateBookGenres(BookDTO book)
+        {
+            return _service.UpdateGenresInBook(book);
         }
 
         /// <summary>
         /// 1.4.3 - Удаляет книгу
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="bookId"></param>
         [HttpDelete]
-        public void DeleteBook([FromQuery] int id)
+        public IActionResult DeleteBook([FromQuery] int bookId)
         {
-            ModelDB.Init.Books.RemoveAll(b => b.Id == id);
+            try
+            {
+                _service.DeleteBook(bookId);
+                return Ok();
+            }
+            catch (BadRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

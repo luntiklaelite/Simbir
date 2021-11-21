@@ -1,6 +1,7 @@
 ﻿using LibraryAPI.Models.DTOs;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,23 +10,20 @@ namespace LibraryAPI.Models.Entities
     /// <summary>
     /// 1.2.2 - Класс книги
     /// </summary>
-    public class Book
+    public class Book : HistoryItem
     {
         public int Id { get; set; }
+        [Required]
         public string Title { get; set; }
-        public virtual Human Author { get; set; }
-        public virtual Genre Genre { get; set; }
+        public DateTime DateOfWrite { get; set; }
 
-        public Book(Human author)
-        {
-            //хардкод до энтити
-            Author = author;
-            Author.WritedBooks.Add(this);
-        }
+        [Required]
+        public virtual Author Author { get; set; }
+        public virtual List<Genre> Genres { get; set; }
+        public virtual List<LibraryCard> LibraryCards { get; set; }
 
-        public BookDTO ToDTO()
+        public Book()
         {
-            return new BookDTO { AuthorName = Author.Fullname, Genre = Genre.Name, Title = Title };
         }
     }
 }
