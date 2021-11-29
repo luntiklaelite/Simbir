@@ -1,6 +1,5 @@
 ﻿using LibraryAPI.Models.DTOs;
 using LibraryAPI.Models.DTOs.Other;
-using LibraryAPI.Models.Exceptions;
 using LibraryAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,38 +13,38 @@ namespace LibraryAPI.Controllers
     [ApiController]
     public class AuthorController : ControllerBase
     {
-        AuthorService _authorService;
+        private readonly AuthorService _authorService;
         public AuthorController(AuthorService authorService)
         {
             _authorService = authorService;
         }
 
         [HttpGet]
-        public List<AuthorDTO> GetAuthors()
+        public List<AuthorDto> GetAuthors()
         {
             return _authorService.GetAuthors();
         }
 
         [HttpGet("WritedBooksInYear")]
-        public List<AuthorDTO> GetAuthorsWhoHaveBooksInYear(int year, bool sortByIncrease = true)
+        public List<AuthorDto> GetAuthorsWhoHaveBooksInYear(int year, bool sortByIncrease = true)
         {
             return _authorService.GetAuthorsWhoHaveBooksInYear(year, sortByIncrease);
         }
 
         [HttpGet("BookTitleContains")]
-        public List<AuthorDTO> GetAuthorsWhoBookTitleContains(string containedWord)
+        public List<AuthorDto> GetAuthorsWhoBookTitleContains(string containedWord)
         {
             return _authorService.GetAuthorsWhoBookTitleContains(containedWord);
         }
 
         [HttpGet("WithBooks")]
-        public AuthorBooksDTO GetAuthorWithBooks([FromQuery] int authorId)
+        public AuthorBooksDto GetAuthorWithBooks([FromQuery] int authorId)
         {
             return _authorService.GetBooksByAuthorId(authorId);
         }
 
         [HttpPost]
-        public AuthorBooksDTO AddAuthor([FromBody] AuthorBooksDTO author)
+        public AuthorBooksDto AddAuthor([FromBody] AuthorBooksDto author)
         {
             return _authorService.AddAuthor(author);
         }
@@ -53,15 +52,11 @@ namespace LibraryAPI.Controllers
         [HttpDelete]
         public IActionResult DeleteAuthor([FromQuery] int authorId)
         {
-            try
-            {
-                _authorService.DeleteAuthor(authorId);
+            var result = _authorService.DeleteAuthor(authorId);
+            if (result.IsSuccess)
                 return Ok();
-            }
-            catch(BadRequestException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            else
+                return BadRequest(result.ErrorMessage);
         }
     }
 }

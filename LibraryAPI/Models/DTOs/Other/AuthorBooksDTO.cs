@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace LibraryAPI.Models.DTOs.Other
 {
-    public class AuthorBooksDTO
+    public class AuthorBooksDto
     {
         [Required(ErrorMessage = "Укажите автора!")]
-        public AuthorDTO Author { get; set; }
-        public List<BookAndGenresDTO> Books { get; set; }
+        public AuthorDto Author { get; set; }
+        public List<BookAndGenresDto> Books { get; set; }
     }
 }

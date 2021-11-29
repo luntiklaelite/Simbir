@@ -1,6 +1,7 @@
 ﻿using LibraryAPI.Models.DTOs;
 using LibraryAPI.Models.Entities;
 using LibraryAPI.Repositories.Interfaces;
+using Skreet2k.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,27 +11,27 @@ namespace LibraryAPI.Services
 {
     public class BookService
     {
-        IBookRepository _repository;
+        private readonly IBookRepository _repository;
         public BookService(IBookRepository repository)
         {
             _repository = repository;
         }
 
-        public BookDTO BookDTOByModel(Book book)
+        public BookDto BookDtoByModel(Book book)
         {
-            return new BookDTO
+            return new BookDto
             {
                 Id = book.Id,
                 Title = book.Title,
                 DateOfWrite = book.DateOfWrite,
-                Author = new AuthorDTO
+                Author = new AuthorDto
                 {
                     Id = book.Author.Id,
                     FirstName = book.Author?.FirstName,
                     MiddleName = book.Author?.MiddleName,
                     LastName = book.Author?.LastName
                 },
-                Genres = book.Genres?.Select(s => new GenreDTO
+                Genres = book.Genres?.Select(s => new GenreDto
                 {
                     Id = s.Id,
                     Name = s.Name
@@ -38,27 +39,31 @@ namespace LibraryAPI.Services
             };
         }
 
-        public List<BookDTO> GetAllBooks()
+        public List<BookDto> GetAllBooks()
         {
-            return _repository.GetBooks().Select(b => BookDTOByModel(b)).ToList();
+            return _repository.GetBooks().Select(b => BookDtoByModel(b)).ToList();
         }
 
-        public List<BookDTO> GetBooksByGenreId(int genreId)
+        public List<BookDto> GetBooksByGenreId(int genreId)
         {
-            return _repository.GetBooksByGenre(genreId).Select(b => BookDTOByModel(b)).ToList();
+            return _repository.GetBooksByGenre(genreId).Select(b => BookDtoByModel(b)).ToList();
         }
 
-        public List<BookDTO> GetBooksByAuthor(string firstName, string lastName, string middleName)
+        public List<BookDto> GetBooksByAuthor(string firstName, string lastName, string middleName)
         {
-            return _repository.GetBooksByAuthor(firstName, lastName, middleName).Select(b => BookDTOByModel(b)).ToList();
+            return _repository.GetBooksByAuthor(firstName, lastName, middleName).Select(b => BookDtoByModel(b)).ToList();
         } 
 
-        public BookDTO UpdateGenresInBook(BookDTO book)
+        public Result<BookDto> UpdateGenresInBook(BookDto book)
         {
-            return BookDTOByModel(_repository.UpdateGenresInBook(book.Id, book.Genres.Select(s => new Genre { Id = s.Id, Name = s.Name }).ToList()));
+            var resultRepo = _repository.UpdateGenresInBook(book.Id, book.Genres.Select(s => new Genre { Id = s.Id, Name = s.Name }).ToList());
+            if (resultRepo.IsSuccess)
+                return new Result<BookDto>(BookDtoByModel(resultRepo.Content));
+            else
+                return new Result<BookDto> { ErrorMessage = resultRepo.ErrorMessage };
         }
 
-        public BookDTO AddBook(BookDTO book)
+        public BookDto AddBook(BookDto book)
         {
             var addedBook = _repository.AddBook(new Book
             {
@@ -77,11 +82,11 @@ namespace LibraryAPI.Services
                     LastName = book.Author.LastName
                 }
             });
-            return BookDTOByModel(addedBook);
+            return BookDtoByModel(addedBook);
         }
-        public void DeleteBook(int bookId)
+        public Result DeleteBook(int bookId)
         {
-            _repository.DeleteBook(bookId);
+            return _repository.DeleteBook(bookId);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using LibraryAPI.Models.DTOs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -21,14 +20,5 @@ namespace LibraryAPI.Models.Entities
         public DateTime BirthDate { get; set; }
 
         public virtual List<LibraryCard> LibraryCards { get; set; }
-
-        public Human()
-        {
-        }
-
-        public string GetFullName()
-        {
-            return $"{FirstName} {LastName} {MiddleName}";
-        }
     }
 }

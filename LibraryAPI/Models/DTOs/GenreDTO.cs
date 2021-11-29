@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LibraryAPI.Models.DTOs
 {
-    public class GenreDTO
+    public class GenreDto
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Укажите название жанра")]

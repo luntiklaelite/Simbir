@@ -1,7 +1,7 @@
 ﻿using LibraryAPI.Models.Entities;
-using LibraryAPI.Models.Exceptions;
 using LibraryAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Skreet2k.Common.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,7 +9,7 @@ namespace LibraryAPI.Repositories
 {
     public class AuthorRepository : BaseRepository, IAuthorRepository
     {
-        ContextDB _contextDB;
+        private readonly ContextDB _contextDB;
         public AuthorRepository(ContextDB contextDB)
         {
             _contextDB = contextDB;
@@ -42,16 +42,17 @@ namespace LibraryAPI.Repositories
             return author;
         }
 
-        public void DeleteAuthor(int authorId)
+        public Result DeleteAuthor(int authorId)
         {
             var authorQuery = _contextDB.Authors.Where(a => a.Id == authorId);
             if (authorQuery.Count() == 0)
-                throw new BadRequestException("Такого автора не существует");
+                return new Result { ErrorMessage = "Такого автора не существует"};
             authorQuery = authorQuery.Where(a => a.Books.Count == 0);
             if (authorQuery.Count() == 0)
-                throw new BadRequestException("Нельзя удалить автора с книгами");
+                return new Result { ErrorMessage = "Нельзя удалить автора с книгами" };
             _contextDB.Authors.Remove(authorQuery.FirstOrDefault());
             _contextDB.SaveChanges();
+            return new Result { ReturnCode = 200 };
         }
 
         public List<Author> GetAuthorsWhoHaveBooksInYear(int year, bool sortByIncrease)
@@ -65,7 +66,7 @@ namespace LibraryAPI.Repositories
 
         public List<Author> GetAuthorsWhoBookTitleContains(string containedWord)
         {
-            return _contextDB.Authors.Where(a => a.Books.Any(b => b.Title.Contains(containedWord))).ToList();
+            return _contextDB.Authors.Where(a => a.Books.Any(b => b.Title.ToLower().Contains(containedWord.ToLower()))).ToList();
         }
     }
 }

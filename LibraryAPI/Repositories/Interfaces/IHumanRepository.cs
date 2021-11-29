@@ -1,5 +1,6 @@
 ﻿using LibraryAPI.Models.Entities;
 using LibraryAPI.Models.Other;
+using Skreet2k.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +14,16 @@ namespace LibraryAPI.Repositories.Interfaces
 
         List<Human> GetHumans();
 
-        Human UpdateHuman(Human human);
+        Result<Human> UpdateHuman(Human human);
 
-        void DeleteHumanByFullname(string firstName, string lastName, string middleName);
+        Result DeleteHumanByFullname(string firstName, string lastName, string middleName);
 
-        void DeleteHumanById(int humanId);
+        Result DeleteHumanById(int humanId);
 
         List<LibraryCard> GetHumansBooks(int humanId);
 
-        void AddLibraryCard(int humanId, int bookId);
+        Result AddLibraryCard(int humanId, int bookId);
 
-        void DeleteLibraryCard(int humanId, int bookId);
+        Result DeleteLibraryCard(int humanId, int bookId);
     }
 }

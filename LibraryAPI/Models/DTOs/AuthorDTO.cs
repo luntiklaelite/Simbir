@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LibraryAPI.Models.DTOs
 {
-    public class AuthorDTO
+    public class AuthorDto
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Укажите имя")]

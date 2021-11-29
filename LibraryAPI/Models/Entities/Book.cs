@@ -1,5 +1,4 @@
-﻿using LibraryAPI.Models.DTOs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -21,9 +20,5 @@ namespace LibraryAPI.Models.Entities
         public virtual Author Author { get; set; }
         public virtual List<Genre> Genres { get; set; }
         public virtual List<LibraryCard> LibraryCards { get; set; }
-
-        public Book()
-        {
-        }
     }
 }

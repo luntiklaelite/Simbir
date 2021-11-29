@@ -11,7 +11,7 @@ namespace LibraryAPI.Repositories
 {
     public class GenreRepository : BaseRepository, IGenreRepository
     {
-        ContextDB _contextDB;
+        private readonly ContextDB _contextDB;
         public GenreRepository(ContextDB contextDB)
         {
             _contextDB = contextDB;

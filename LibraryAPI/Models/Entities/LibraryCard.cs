@@ -1,5 +1,4 @@
-﻿using LibraryAPI.Models.DTOs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,7 +21,5 @@ namespace LibraryAPI.Models.Entities
 
         public virtual Human Human { get; set; }
         public virtual Book Book { get; set; }
-        
-
     }
 }
