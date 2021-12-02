@@ -13,26 +13,26 @@ namespace LibraryAPI.Controllers
     [ApiController]
     public class GenreController : ControllerBase
     {
-        GenreService _genreService;
+        private readonly GenreService _genreService;
         public GenreController(GenreService genreService)
         {
             _genreService = genreService;
         }
 
         [HttpGet]
-        public List<GenreDTO> GetAllGenres()
+        public List<GenreDto> GetAllGenres()
         {
             return _genreService.GetGenres();
         }
 
         [HttpPost]
-        public GenreDTO AddGenre(GenreDTO genre)
+        public GenreDto AddGenre(GenreDto genre)
         {
             return _genreService.AddGenre(genre);
         }
 
         [HttpGet("Statistic")]
-        public List<GenreStatisticDTO> GetStatistic()
+        public List<GenreStatisticDto> GetStatistic()
         {
             return _genreService.GetStatistic();
         }

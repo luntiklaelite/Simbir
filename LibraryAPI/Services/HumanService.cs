@@ -3,6 +3,7 @@ using LibraryAPI.Models.DTOs.Other;
 using LibraryAPI.Models.Entities;
 using LibraryAPI.Models.Other;
 using LibraryAPI.Repositories.Interfaces;
+using Skreet2k.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +13,15 @@ namespace LibraryAPI.Services
 {
     public class HumanService
     {
-        IHumanRepository _repository;
+        private readonly IHumanRepository _repository;
         public HumanService(IHumanRepository repository)
         {
             _repository = repository;
         }
 
-        public HumanDTO HumanDTOByModel(Human human)
+        public HumanDto HumanDtoByModel(Human human)
         {
-            return new HumanDTO
+            return new HumanDto
             {
                 Id = human.Id,
                 FirstName = human.FirstName,
@@ -30,7 +31,7 @@ namespace LibraryAPI.Services
             };
         }
 
-        public Human ModelByHumanDTO(HumanDTO human)
+        public Human ModelByHumanDto(HumanDto human)
         {
             return new Human
             {
@@ -42,49 +43,52 @@ namespace LibraryAPI.Services
             };
         }
 
-        public List<HumanDTO> GetHumans()
+        public List<HumanDto> GetHumans()
         {
-            return _repository.GetHumans().Select(h => HumanDTOByModel(h)).ToList();
+            return _repository.GetHumans().Select(h => HumanDtoByModel(h)).ToList();
         }
 
-        public HumanDTO AddHuman(HumanDTO human)
+        public HumanDto AddHuman(HumanDto human)
         {
-            var addedHuman = _repository.AddHuman(ModelByHumanDTO(human));
-            return HumanDTOByModel(addedHuman);
+            var addedHuman = _repository.AddHuman(ModelByHumanDto(human));
+            return HumanDtoByModel(addedHuman);
         }
 
-        public HumanDTO UpdateHuman(HumanDTO human)
+        public Result<HumanDto> UpdateHuman(HumanDto human)
         {
-            var updatedHuman = _repository.UpdateHuman(ModelByHumanDTO(human));
-            return HumanDTOByModel(updatedHuman);
+            var updatedHuman = _repository.UpdateHuman(ModelByHumanDto(human));
+            if (updatedHuman.IsSuccess)
+                return new Result<HumanDto>(HumanDtoByModel(updatedHuman.Content));
+            else
+                return new Result<HumanDto> { ErrorMessage = updatedHuman.ErrorMessage };
         }
 
-        public void DeleteHumanById(int humanId)
+        public Result DeleteHumanById(int humanId)
         {
-            _repository.DeleteHumanById(humanId);
+            return _repository.DeleteHumanById(humanId);
         }
 
-        public void DeleteHumanByFullname(string firstName, string lastName, string middleName)
+        public Result DeleteHumanByFullname(string firstName, string lastName, string middleName)
         {
-            _repository.DeleteHumanByFullname(firstName, lastName, middleName);
+            return _repository.DeleteHumanByFullname(firstName, lastName, middleName);
         }
 
-        public List<BookDTO> GetHumansBooks(int humanId)
+        public List<BookDto> GetHumansBooks(int humanId)
         {
             var libraryCards = _repository.GetHumansBooks(humanId);
-            return libraryCards.Select(lc => new BookDTO
+            return libraryCards.Select(lc => new BookDto
             {
                 Id = lc.Book.Id,
                 Title = lc.Book.Title,
                 DateOfWrite = lc.Book.DateOfWrite,
-                Author = new AuthorDTO
+                Author = new AuthorDto
                 {
                     FirstName = lc.Book.Author.FirstName,
                     LastName = lc.Book.Author.LastName,
                     MiddleName = lc.Book.Author.MiddleName,
                     Id = lc.Book.Author.Id
                 },
-                Genres = lc.Book.Genres?.Select(g => new GenreDTO
+                Genres = lc.Book.Genres?.Select(g => new GenreDto
                 {
                     Id = g.Id,
                     Name = g.Name
@@ -93,14 +97,14 @@ namespace LibraryAPI.Services
             }).ToList();
         }
 
-        public void AddLibraryCard(int humanId, int bookId)
+        public Result AddLibraryCard(int humanId, int bookId)
         {
-            _repository.AddLibraryCard(humanId, bookId);
+            return _repository.AddLibraryCard(humanId, bookId);
         }
 
-        public void DeleteLibraryCard(int humanId, int bookId)
+        public Result DeleteLibraryCard(int humanId, int bookId)
         {
-            _repository.DeleteLibraryCard(humanId, bookId);
+            return _repository.DeleteLibraryCard(humanId, bookId);
         }
     }
 }

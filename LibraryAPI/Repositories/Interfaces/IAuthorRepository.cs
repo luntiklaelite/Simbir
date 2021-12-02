@@ -1,4 +1,5 @@
 ﻿using LibraryAPI.Models.Entities;
+using Skreet2k.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace LibraryAPI.Repositories.Interfaces
 
         Author UpdateAuthor(Author author);
 
-        void DeleteAuthor(int authorId);
+        Result DeleteAuthor(int authorId);
 
         Author GetAuthorById(int authorId);
 

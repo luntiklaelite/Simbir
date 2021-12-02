@@ -2,6 +2,7 @@
 using LibraryAPI.Models.DTOs.Other;
 using LibraryAPI.Models.Entities;
 using LibraryAPI.Repositories.Interfaces;
+using Skreet2k.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +12,15 @@ namespace LibraryAPI.Services
 {
     public class AuthorService
     {
-        IAuthorRepository _repository;
+        private readonly IAuthorRepository _repository;
         public AuthorService(IAuthorRepository repository)
         {
             _repository = repository;
         }
 
-        public static AuthorDTO AuthorDTOByModel(Author author)
+        public static AuthorDto AuthorDtoByModel(Author author)
         {
-            return new AuthorDTO
+            return new AuthorDto
             {
                 FirstName = author.FirstName,
                 LastName = author.LastName,
@@ -28,19 +29,19 @@ namespace LibraryAPI.Services
             };
         }
 
-        public static AuthorBooksDTO AuthorBooksDTOByModel(Author author)
+        public static AuthorBooksDto AuthorBooksDtoByModel(Author author)
         {
             if (author == null)
                 return null;
-            return new AuthorBooksDTO
+            return new AuthorBooksDto
             {
-                Author = AuthorDTOByModel(author),
-                Books = author.Books?.Select(b => new BookAndGenresDTO
+                Author = AuthorDtoByModel(author),
+                Books = author.Books?.Select(b => new BookAndGenresDto
                 {
                     Id = b.Id,
                     Title = b.Title,
                     DateOfWrite = b.DateOfWrite,
-                    Genres = b.Genres?.Select(g => new GenreDTO
+                    Genres = b.Genres?.Select(g => new GenreDto
                     {
                         Id = g.Id,
                         Name = g.Name
@@ -49,30 +50,30 @@ namespace LibraryAPI.Services
             };
         }
 
-        public List<AuthorDTO> GetAuthors()
+        public List<AuthorDto> GetAuthors()
         {
-            return _repository.GetAuthors().Select(s => AuthorDTOByModel(s)).ToList();
+            return _repository.GetAuthors().Select(s => AuthorDtoByModel(s)).ToList();
         }
 
-        public List<AuthorDTO> GetAuthorsWhoHaveBooksInYear(int year, bool sortByIncrease)
+        public List<AuthorDto> GetAuthorsWhoHaveBooksInYear(int year, bool sortByIncrease)
         {
             return _repository.GetAuthorsWhoHaveBooksInYear(year, sortByIncrease)
-                .Select(a => AuthorDTOByModel(a)).ToList();
+                .Select(a => AuthorDtoByModel(a)).ToList();
         }
 
-        public List<AuthorDTO> GetAuthorsWhoBookTitleContains(string containedWord)
+        public List<AuthorDto> GetAuthorsWhoBookTitleContains(string containedWord)
         {
             return _repository.GetAuthorsWhoBookTitleContains(containedWord)
-                .Select(a => AuthorDTOByModel(a)).ToList();
+                .Select(a => AuthorDtoByModel(a)).ToList();
         }
 
-        public AuthorBooksDTO GetBooksByAuthorId(int authorId)
+        public AuthorBooksDto GetBooksByAuthorId(int authorId)
         {
             var author = _repository.GetAuthorById(authorId);
-            return AuthorBooksDTOByModel(author);
+            return AuthorBooksDtoByModel(author);
         }
 
-        public AuthorBooksDTO AddAuthor(AuthorBooksDTO author)
+        public AuthorBooksDto AddAuthor(AuthorBooksDto author)
         {
             var addedAuthor = _repository.AddAuthor(new Author
             {
@@ -85,12 +86,12 @@ namespace LibraryAPI.Services
                     DateOfWrite = b.DateOfWrite,
                 }).ToList()
             });
-            return AuthorBooksDTOByModel(addedAuthor);
+            return AuthorBooksDtoByModel(addedAuthor);
         }
 
-        public void DeleteAuthor(int authorId)
+        public Result DeleteAuthor(int authorId)
         {
-            _repository.DeleteAuthor(authorId);
+            return _repository.DeleteAuthor(authorId);
         }
     }
 }

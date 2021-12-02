@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace LibraryAPI.Models.DTOs.Other
 {
-    public class GenreStatisticDTO
+    public class GenreStatisticDto
     {
-        public GenreDTO Genre { get; set; }
+        public GenreDto Genre { get; set; }
         public int BooksCount { get; set; }
     }
 }

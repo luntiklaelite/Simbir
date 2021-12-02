@@ -1,6 +1,4 @@
 ﻿using LibraryAPI.Models.DTOs;
-using LibraryAPI.Models.Entities;
-using LibraryAPI.Models.Exceptions;
 using LibraryAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,7 +16,7 @@ namespace LibraryAPI.Controllers
     [Route("[controller]")]
     public class BookController : ControllerBase
     {
-        private BookService _service;
+        private readonly BookService _service;
         public BookController(BookService service)
         {
             _service = service;
@@ -30,19 +28,19 @@ namespace LibraryAPI.Controllers
         /// <param name="sortByProperty">Сортировка по свойству (author, genre, title) </param>
         /// <returns></returns>
         [HttpGet]
-        public List<BookDTO> GetAllBooks()
+        public List<BookDto> GetAllBooks()
         {
             return _service.GetAllBooks();
         }
 
         [HttpGet("ByGenre")]
-        public List<BookDTO> GetBooksByGenre(int genreId)
+        public List<BookDto> GetBooksByGenre(int genreId)
         {
             return _service.GetBooksByGenreId(genreId);
         }
 
         [HttpGet("ByAuthor")]
-        public List<BookDTO> GetBooksByAuthor(string firstName, string lastName, string middleName)
+        public List<BookDto> GetBooksByAuthor(string firstName, string lastName, string middleName)
         {
             return _service.GetBooksByAuthor(firstName, lastName, middleName);
         }
@@ -52,15 +50,19 @@ namespace LibraryAPI.Controllers
         /// </summary>
         /// <param name="book"></param>
         [HttpPost]
-        public BookDTO AddBook(BookDTO book)
+        public BookDto AddBook(BookDto book)
         {
             return _service.AddBook(book);
         }
 
         [HttpPut]
-        public BookDTO UpdateBookGenres(BookDTO book)
+        public IActionResult UpdateBookGenres(BookDto book)
         {
-            return _service.UpdateGenresInBook(book);
+            var result = _service.UpdateGenresInBook(book);
+            if (result.IsSuccess)
+                return Ok(result.Content);
+            else
+                return BadRequest(result.ErrorMessage);
         }
 
         /// <summary>
@@ -70,15 +72,11 @@ namespace LibraryAPI.Controllers
         [HttpDelete]
         public IActionResult DeleteBook([FromQuery] int bookId)
         {
-            try
-            {
-                _service.DeleteBook(bookId);
+            var result = _service.DeleteBook(bookId);
+            if (result.IsSuccess)
                 return Ok();
-            }
-            catch (BadRequestException e)
-            {
-                return BadRequest(e.Message);
-            }
+            else
+                return BadRequest(result.ErrorMessage);
         }
     }
 }

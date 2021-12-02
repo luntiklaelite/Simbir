@@ -1,6 +1,4 @@
 ﻿using LibraryAPI.Models.DTOs;
-using LibraryAPI.Models.Entities;
-using LibraryAPI.Models.Exceptions;
 using LibraryAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,7 +17,7 @@ namespace LibraryAPI.Controllers
     [Route("[controller]")]
     public class HumanController : ControllerBase
     {
-        HumanService _serivce;
+        private readonly HumanService _serivce;
         public HumanController(HumanService service)
         {
             _serivce = service;
@@ -30,7 +28,7 @@ namespace LibraryAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<HumanDTO> GetAllHumans()
+        public IEnumerable<HumanDto> GetAllHumans()
         {
             return _serivce.GetHumans();
         }
@@ -40,25 +38,22 @@ namespace LibraryAPI.Controllers
         /// </summary>
         /// <param name="human"></param>
         [HttpPost]
-        public HumanDTO AddHuman([FromBody] HumanDTO human)
+        public HumanDto AddHuman([FromBody] HumanDto human)
         {
             return _serivce.AddHuman(human);
         }
 
         [HttpPut]
-        public IActionResult UpdateHuman([FromBody] HumanDTO human)
+        public IActionResult UpdateHuman([FromBody] HumanDto human)
         {
-            try
-            {
-                return Ok(_serivce.UpdateHuman(human));
-            }
-            catch (BadRequestException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = _serivce.UpdateHuman(human);
+            if (result.IsSuccess)
+                return Ok(result.Content);
+            else
+                return BadRequest(result.ErrorMessage);
         }
         [HttpGet("LibraryCards")]
-        public List<BookDTO> GetHumansBooks([FromQuery] int humanId)
+        public List<BookDto> GetHumansBooks([FromQuery] int humanId)
         {
             return _serivce.GetHumansBooks(humanId);
         }
@@ -66,29 +61,21 @@ namespace LibraryAPI.Controllers
         [HttpPost("AddLibraryCard")]
         public IActionResult AddLibraryCard(int humanId, int bookId)
         {
-            try
-            {
-                _serivce.AddLibraryCard(humanId, bookId);
-                return Ok(_serivce.GetHumansBooks(humanId));
-            }
-            catch(BadRequestException e)
-            {
-                return BadRequest(e.Message);
-            }
+            var result = _serivce.AddLibraryCard(humanId, bookId);
+            if (result.IsSuccess)
+                return Ok();
+            else
+                return BadRequest(result.ErrorMessage);
         }
 
         [HttpPost("DeleteLibraryCard")]
         public IActionResult DeleteLibraryCard(int humanId, int bookIdd)
         {
-            try
-            {
-                _serivce.DeleteLibraryCard(humanId, bookIdd);
-                return Ok(_serivce.GetHumansBooks(humanId));
-            }
-            catch (BadRequestException e)
-            {
-                return BadRequest(e.Message);
-            }
+            var result = _serivce.DeleteLibraryCard(humanId, bookIdd);
+            if (result.IsSuccess)
+                return Ok();
+            else
+                return BadRequest(result.ErrorMessage);
         }
 
         /// <summary>
@@ -98,29 +85,21 @@ namespace LibraryAPI.Controllers
         [HttpDelete("DeleteById")]
         public IActionResult DeleteHumanById([FromQuery] int humanId)
         {
-            try
-            {
-                _serivce.DeleteHumanById(humanId);
+            var result = _serivce.DeleteHumanById(humanId);
+            if (result.IsSuccess)
                 return Ok();
-            }
-            catch(BadRequestException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            else
+                return BadRequest(result.ErrorMessage);
         }
 
         [HttpDelete("DeleteByFullName")]
         public IActionResult DeleteHumanByFullname([FromQuery] string firstName, [FromQuery] string lastName, [FromQuery] string middleName)
         {
-            try
-            {
-                _serivce.DeleteHumanByFullname(firstName, lastName, middleName);
+            var result = _serivce.DeleteHumanByFullname(firstName, lastName, middleName);
+            if (result.IsSuccess)
                 return Ok();
-            }
-            catch (BadRequestException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            else
+                return BadRequest(result.ErrorMessage);
         }
     }
 }
