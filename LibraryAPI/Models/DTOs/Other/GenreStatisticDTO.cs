@@ -9,5 +9,17 @@ namespace LibraryAPI.Models.DTOs.Other
     {
         public GenreDto Genre { get; set; }
         public int BooksCount { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj is GenreStatisticDto dto &&
+                   EqualityComparer<GenreDto>.Default.Equals(Genre, dto.Genre) &&
+                   BooksCount == dto.BooksCount;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Genre, BooksCount);
+        }
     }
 }
