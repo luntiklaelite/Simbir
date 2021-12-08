@@ -4,6 +4,7 @@ using LibraryAPI.Models.DTOs;
 using LibraryAPI.Models.Entities;
 using LibraryAPI.Repositories.Interfaces;
 using LibraryAPI.Services;
+using LibraryAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Skreet2k.Common.Models;
@@ -23,7 +24,7 @@ namespace WebApiTest.Controllers
         {
             //Arrange
             int authorId = 0;
-            var serviceMock = new Mock<AuthorService>(null);
+            var serviceMock = new Mock<IAuthorService>();
             serviceMock.Setup(r => r.DeleteAuthor(authorId)).Returns(new Result { ErrorMessage = "error" });
 
             var controller = new AuthorController(serviceMock.Object);
@@ -40,7 +41,7 @@ namespace WebApiTest.Controllers
         {
             //Arrange
             int authorId = 0;
-            var serviceMock = new Mock<AuthorService>(null);
+            var serviceMock = new Mock<IAuthorService>();
             serviceMock.Setup(r => r.DeleteAuthor(authorId)).Returns(new Result());
 
             var controller = new AuthorController(serviceMock.Object);

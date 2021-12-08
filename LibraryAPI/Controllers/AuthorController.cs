@@ -1,6 +1,7 @@
 ﻿using LibraryAPI.Models.DTOs;
 using LibraryAPI.Models.DTOs.Other;
 using LibraryAPI.Services;
+using LibraryAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ namespace LibraryAPI.Controllers
     [ApiController]
     public class AuthorController : ControllerBase
     {
-        private readonly AuthorService _authorService;
-        public AuthorController(AuthorService authorService)
+        private readonly IAuthorService _authorService;
+        public AuthorController(IAuthorService authorService)
         {
             _authorService = authorService;
         }

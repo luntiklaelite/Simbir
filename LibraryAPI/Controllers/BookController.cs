@@ -1,5 +1,6 @@
 ﻿using LibraryAPI.Models.DTOs;
 using LibraryAPI.Services;
+using LibraryAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,8 +17,8 @@ namespace LibraryAPI.Controllers
     [Route("[controller]")]
     public class BookController : ControllerBase
     {
-        private readonly BookService _service;
-        public BookController(BookService service)
+        private readonly IBookService _service;
+        public BookController(IBookService service)
         {
             _service = service;
         }

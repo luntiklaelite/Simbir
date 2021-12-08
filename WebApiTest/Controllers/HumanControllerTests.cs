@@ -3,6 +3,7 @@ using LibraryAPI.Controllers;
 using LibraryAPI.Models.DTOs;
 using LibraryAPI.Models.DTOs.Other;
 using LibraryAPI.Services;
+using LibraryAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Skreet2k.Common.Models;
@@ -23,7 +24,7 @@ namespace WebApiTest.Controllers
             //Arrange
             Fixture fixture = new Fixture().WithoutCircular();
             var human = fixture.CreateHumanDto();
-            var serviceMock = new Mock<HumanService>(null);
+            var serviceMock = new Mock<IHumanService>();
             serviceMock.Setup(p => p.UpdateHuman(human)).Returns(new Result<HumanDto> { ErrorMessage = "error" });
 
             var controller = new HumanController(serviceMock.Object);
@@ -41,7 +42,7 @@ namespace WebApiTest.Controllers
             //Arrange
             Fixture fixture = new Fixture().WithoutCircular();
             var human = fixture.CreateHumanDto();
-            var serviceMock = new Mock<HumanService>(null);
+            var serviceMock = new Mock<IHumanService>();
             serviceMock.Setup(p => p.GetHumans()).Returns(new List<HumanDto> { human });
 
             var controller = new HumanController(serviceMock.Object);

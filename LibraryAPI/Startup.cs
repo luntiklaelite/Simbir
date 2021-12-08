@@ -2,6 +2,7 @@ using LibraryAPI.Middlewares;
 using LibraryAPI.Repositories;
 using LibraryAPI.Repositories.Interfaces;
 using LibraryAPI.Services;
+using LibraryAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -39,10 +40,10 @@ namespace LibraryAPI
             services.AddTransient<IGenreRepository, GenreRepository>();
             services.AddTransient<IHumanRepository, HumanRepository>();
 
-            services.AddTransient<GenreService>();
-            services.AddTransient<BookService>();
-            services.AddTransient<AuthorService>();
-            services.AddTransient<HumanService>();
+            services.AddTransient<IGenreService, GenreService>();
+            services.AddTransient<IBookService, BookService>();
+            services.AddTransient<IAuthorService, AuthorService>();
+            services.AddTransient<IHumanService, HumanService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

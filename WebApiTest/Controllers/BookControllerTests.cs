@@ -2,6 +2,7 @@
 using LibraryAPI.Controllers;
 using LibraryAPI.Models.DTOs;
 using LibraryAPI.Services;
+using LibraryAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Skreet2k.Common.Models;
@@ -22,7 +23,7 @@ namespace WebApiTest.Controllers
             //Arrange
             Fixture fixture = new Fixture().WithoutCircular();
             var bookDto = fixture.CreateBookDto();
-            var serviceMock = new Mock<BookService>(null);
+            var serviceMock = new Mock<IBookService>();
             serviceMock.SetReturnsDefault(new Result<BookDto> { ErrorMessage = "error" });
 
             var controller = new BookController(serviceMock.Object);
@@ -40,7 +41,7 @@ namespace WebApiTest.Controllers
             //Arrange
             Fixture fixture = new Fixture().WithoutCircular();
             var bookDto = fixture.CreateBookDto();
-            var serviceMock = new Mock<BookService>(null);
+            var serviceMock = new Mock<IBookService>();
             //serviceMock.Setup(p => p.UpdateGenresInBook(bookDto)).Returns(new Result<BookDto>());
             serviceMock.SetReturnsDefault(new Result<BookDto>());
 

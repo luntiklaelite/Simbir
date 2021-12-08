@@ -3,6 +3,7 @@ using LibraryAPI.Models.DTOs.Other;
 using LibraryAPI.Models.Entities;
 using LibraryAPI.Models.Other;
 using LibraryAPI.Repositories.Interfaces;
+using LibraryAPI.Services.Interfaces;
 using Skreet2k.Common.Models;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace LibraryAPI.Services
 {
-    public class HumanService
+    public class HumanService : IHumanService
     {
         private readonly IHumanRepository _repository;
         public HumanService(IHumanRepository repository)
@@ -43,7 +44,7 @@ namespace LibraryAPI.Services
             };
         }
 
-        public virtual List<HumanDto> GetHumans()
+        public List<HumanDto> GetHumans()
         {
             return _repository.GetHumans().Select(h => HumanDtoByModel(h)).ToList();
         }
@@ -54,7 +55,7 @@ namespace LibraryAPI.Services
             return HumanDtoByModel(addedHuman);
         }
 
-        public virtual Result<HumanDto> UpdateHuman(HumanDto human)
+        public Result<HumanDto> UpdateHuman(HumanDto human)
         {
             var updatedHuman = _repository.UpdateHuman(ModelByHumanDto(human));
             if (updatedHuman.IsSuccess)

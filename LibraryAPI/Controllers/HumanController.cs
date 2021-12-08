@@ -1,5 +1,6 @@
 ﻿using LibraryAPI.Models.DTOs;
 using LibraryAPI.Services;
+using LibraryAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -17,8 +18,8 @@ namespace LibraryAPI.Controllers
     [Route("[controller]")]
     public class HumanController : ControllerBase
     {
-        private readonly HumanService _serivce;
-        public HumanController(HumanService service)
+        private readonly IHumanService _serivce;
+        public HumanController(IHumanService service)
         {
             _serivce = service;
         }

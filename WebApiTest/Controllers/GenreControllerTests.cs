@@ -3,6 +3,7 @@ using LibraryAPI.Controllers;
 using LibraryAPI.Models.DTOs;
 using LibraryAPI.Models.DTOs.Other;
 using LibraryAPI.Services;
+using LibraryAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Skreet2k.Common.Models;
@@ -27,7 +28,7 @@ namespace WebApiTest.Controllers
                 BooksCount = 2,
                 Genre = fixture.CreateGenreDto()
             };
-            var serviceMock = new Mock<GenreService>(null);
+            var serviceMock = new Mock<IGenreService>();
             serviceMock.Setup(p => p.GetStatistic()).Returns(new List<GenreStatisticDto> { statistic });
 
             var controller = new GenreController(serviceMock.Object);
@@ -45,7 +46,7 @@ namespace WebApiTest.Controllers
             //Arrange
             Fixture fixture = new Fixture().WithoutCircular();
             var genre = fixture.CreateGenreDto();
-            var serviceMock = new Mock<GenreService>(null);
+            var serviceMock = new Mock<IGenreService>();
             serviceMock.Setup(p => p.GetGenres()).Returns(new List<GenreDto> { genre });
 
             var controller = new GenreController(serviceMock.Object);
