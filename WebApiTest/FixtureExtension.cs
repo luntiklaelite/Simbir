@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using LibraryAPI.Models.DTOs;
 using LibraryAPI.Models.Entities;
 using System;
 using System.Collections.Generic;
@@ -29,5 +30,14 @@ namespace WebApiTest
 
         public static Human CreateHuman(this Fixture fixture)
             => fixture.Build<Human>().Without(p => p.LibraryCards).Create();
+
+        public static BookDto CreateBookDto(this Fixture fixture)
+            => fixture.Build<BookDto>().Without(p => p.Author).Without(p => p.Genres).Create();
+
+        public static GenreDto CreateGenreDto(this Fixture fixture)
+            => fixture.Build<GenreDto>().Create();
+
+        public static HumanDto CreateHumanDto(this Fixture fixture)
+            => fixture.Build<HumanDto>().Create();
     }
 }

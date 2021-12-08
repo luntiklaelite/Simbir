@@ -43,7 +43,7 @@ namespace LibraryAPI.Services
             };
         }
 
-        public List<HumanDto> GetHumans()
+        public virtual List<HumanDto> GetHumans()
         {
             return _repository.GetHumans().Select(h => HumanDtoByModel(h)).ToList();
         }
@@ -54,7 +54,7 @@ namespace LibraryAPI.Services
             return HumanDtoByModel(addedHuman);
         }
 
-        public Result<HumanDto> UpdateHuman(HumanDto human)
+        public virtual Result<HumanDto> UpdateHuman(HumanDto human)
         {
             var updatedHuman = _repository.UpdateHuman(ModelByHumanDto(human));
             if (updatedHuman.IsSuccess)

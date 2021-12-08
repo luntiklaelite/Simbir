@@ -35,7 +35,7 @@ namespace LibraryAPI.Services
             };
         }
 
-        public List<GenreDto> GetGenres()
+        public virtual List<GenreDto> GetGenres()
         {
             return _repository.GetGenres().Select(g => DtoByModel(g)).ToList();
         }
@@ -45,7 +45,7 @@ namespace LibraryAPI.Services
             return DtoByModel(_repository.AddGenre(ModelByDto(genre)));
         }
 
-        public List<GenreStatisticDto> GetStatistic()
+        public virtual List<GenreStatisticDto> GetStatistic()
         {
             return _repository.GetStatistic().Select(s => new GenreStatisticDto
             {
