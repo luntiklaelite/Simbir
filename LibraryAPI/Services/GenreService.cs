@@ -2,6 +2,7 @@
 using LibraryAPI.Models.DTOs.Other;
 using LibraryAPI.Models.Entities;
 using LibraryAPI.Repositories.Interfaces;
+using LibraryAPI.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LibraryAPI.Services
 {
-    public class GenreService
+    public class GenreService : IGenreService
     {
         private readonly IGenreRepository _repository;
         public GenreService(IGenreRepository repository)
@@ -35,7 +36,7 @@ namespace LibraryAPI.Services
             };
         }
 
-        public virtual List<GenreDto> GetGenres()
+        public List<GenreDto> GetGenres()
         {
             return _repository.GetGenres().Select(g => DtoByModel(g)).ToList();
         }
@@ -45,7 +46,7 @@ namespace LibraryAPI.Services
             return DtoByModel(_repository.AddGenre(ModelByDto(genre)));
         }
 
-        public virtual List<GenreStatisticDto> GetStatistic()
+        public List<GenreStatisticDto> GetStatistic()
         {
             return _repository.GetStatistic().Select(s => new GenreStatisticDto
             {

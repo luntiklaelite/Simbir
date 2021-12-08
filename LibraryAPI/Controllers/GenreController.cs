@@ -1,6 +1,7 @@
 ﻿using LibraryAPI.Models.DTOs;
 using LibraryAPI.Models.DTOs.Other;
 using LibraryAPI.Services;
+using LibraryAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ namespace LibraryAPI.Controllers
     [ApiController]
     public class GenreController : ControllerBase
     {
-        private readonly GenreService _genreService;
-        public GenreController(GenreService genreService)
+        private readonly IGenreService _genreService;
+        public GenreController(IGenreService genreService)
         {
             _genreService = genreService;
         }

@@ -1,6 +1,7 @@
 ﻿using LibraryAPI.Models.DTOs;
 using LibraryAPI.Models.Entities;
 using LibraryAPI.Repositories.Interfaces;
+using LibraryAPI.Services.Interfaces;
 using Skreet2k.Common.Models;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LibraryAPI.Services
 {
-    public class BookService
+    public class BookService : IBookService
     {
         private readonly IBookRepository _repository;
         public BookService(IBookRepository repository)
@@ -54,7 +55,7 @@ namespace LibraryAPI.Services
             return _repository.GetBooksByAuthor(firstName, lastName, middleName).Select(b => BookDtoByModel(b)).ToList();
         } 
 
-        public virtual Result<BookDto> UpdateGenresInBook(BookDto book)
+        public Result<BookDto> UpdateGenresInBook(BookDto book)
         {
             var resultRepo = _repository.UpdateGenresInBook(book.Id, book.Genres.Select(s => new Genre { Id = s.Id, Name = s.Name }).ToList());
             if (resultRepo.IsSuccess)

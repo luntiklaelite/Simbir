@@ -2,6 +2,7 @@
 using LibraryAPI.Models.DTOs.Other;
 using LibraryAPI.Models.Entities;
 using LibraryAPI.Repositories.Interfaces;
+using LibraryAPI.Services.Interfaces;
 using Skreet2k.Common.Models;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LibraryAPI.Services
 {
-    public class AuthorService
+    public class AuthorService : IAuthorService
     {
         private readonly IAuthorRepository _repository;
         public AuthorService(IAuthorRepository repository)
@@ -89,7 +90,7 @@ namespace LibraryAPI.Services
             return AuthorBooksDtoByModel(addedAuthor);
         }
 
-        public virtual Result DeleteAuthor(int authorId)
+        public Result DeleteAuthor(int authorId)
         {
             return _repository.DeleteAuthor(authorId);
         }
