@@ -54,7 +54,7 @@ namespace LibraryAPI.Services
             return _repository.GetBooksByAuthor(firstName, lastName, middleName).Select(b => BookDtoByModel(b)).ToList();
         } 
 
-        public Result<BookDto> UpdateGenresInBook(BookDto book)
+        public virtual Result<BookDto> UpdateGenresInBook(BookDto book)
         {
             var resultRepo = _repository.UpdateGenresInBook(book.Id, book.Genres.Select(s => new Genre { Id = s.Id, Name = s.Name }).ToList());
             if (resultRepo.IsSuccess)

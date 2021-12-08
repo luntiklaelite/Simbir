@@ -27,5 +27,20 @@ namespace LibraryAPI.Models.DTOs
         /// </summary>
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime BirthDate { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj is HumanDto dto &&
+                   Id == dto.Id &&
+                   FirstName == dto.FirstName &&
+                   LastName == dto.LastName &&
+                   MiddleName == dto.MiddleName &&
+                   BirthDate == dto.BirthDate;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, FirstName, LastName, MiddleName, BirthDate);
+        }
     }
 }

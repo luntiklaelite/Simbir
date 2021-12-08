@@ -14,5 +14,19 @@ namespace LibraryAPI.Models.DTOs
         [Required(ErrorMessage = "Укажите фамилию")]
         public string LastName { get; set; }
         public string MiddleName { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj is AuthorDto dto &&
+                   Id == dto.Id &&
+                   FirstName == dto.FirstName &&
+                   LastName == dto.LastName &&
+                   MiddleName == dto.MiddleName;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, FirstName, LastName, MiddleName);
+        }
     }
 }

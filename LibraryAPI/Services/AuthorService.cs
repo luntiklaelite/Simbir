@@ -89,7 +89,7 @@ namespace LibraryAPI.Services
             return AuthorBooksDtoByModel(addedAuthor);
         }
 
-        public Result DeleteAuthor(int authorId)
+        public virtual Result DeleteAuthor(int authorId)
         {
             return _repository.DeleteAuthor(authorId);
         }

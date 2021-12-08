@@ -11,5 +11,17 @@ namespace LibraryAPI.Models.DTOs
         public int Id { get; set; }
         [Required(ErrorMessage = "Укажите название жанра")]
         public string Name { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj is GenreDto dto &&
+                   Id == dto.Id &&
+                   Name == dto.Name;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Name);
+        }
     }
 }
